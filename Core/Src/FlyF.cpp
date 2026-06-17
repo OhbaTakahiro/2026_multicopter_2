@@ -78,8 +78,14 @@ void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3
     //ここからPID
     //目標値の変換（中央1024を0度とし、傾きを最大30度にする計算）
     float roll_target = (sbusdata3ch - 1024) * 0.05f;
+    float pitch_target = (sbusdata1ch - 1024) * 0.05f;
+    float yaw_target = (sbusdata4ch - 1024) * 0.05f;
     roll_pid.calc(roll_target, roll_deg);
+    pitch_pid.calc(pitch_target, pitch_deg);
+    yaw_pid.calc(yaw_target, yaw_deg);
     float roll_u = roll_pid.getData();
+    float pitch_u = pitch_pid.getData();
+    float yaw_u = yaw_pid.getData();
     if(sbusdata9ch < 1000){
         	*current_state = State::Dis;
     }
