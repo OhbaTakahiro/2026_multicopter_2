@@ -115,7 +115,7 @@ void loop(){
             armf(&current_state, &context, sbusdata9ch);
             break;
         case State::Fly:
-            flyf(&current_state, &context, sbusdata9ch, sbusdata3ch);
+            flyf(&current_state, &context, sbusdata9ch, sbusdata3ch, sbusdata1ch, sbusdata4ch);
             break;
         case State::Dis:
             disf(&current_state, &context);

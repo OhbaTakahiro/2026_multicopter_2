@@ -24,7 +24,7 @@ using namespace std;
 static uint32_t last_update_tick = 0;
 static const uint32_t UPDATE_PERIOD_MS = 10;  // 10ms (100Hz)
 
-void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3ch){
+void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3ch, int sbusdata1ch, int sbusdata4ch){
     context->count++;
     printf("Fly %d\n",context->count);
     // 10ms周期で実行
