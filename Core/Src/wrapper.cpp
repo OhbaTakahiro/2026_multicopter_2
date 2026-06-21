@@ -35,7 +35,7 @@ uint16_t SBUSData[10] = {};
 
 ICM42688P_HAL_I2C icm(&hi2c1, 0b1101001);
 
-int sbusdata3ch ,sbusdata9ch;
+int sbusdata3ch ,sbusdata9ch, sbusdata1ch, sbusdata4ch;
 
 void SBUS_decode();
 
@@ -98,6 +98,9 @@ void loop(){
 	//データを送信
 	HAL_UART_Transmit(&huart2, (uint8_t *)str.c_str(),str.length(),100);
 	sbusdata9ch = SBUSData[8];
+	sbusdata3ch = SBUSData[2];
+	sbusdata1ch = SBUSData[0];
+	sbusdata4ch = SBUSData[3];
 	switch(current_state){
 	    case State::Start:
 	    	startf(&current_state, &context);
