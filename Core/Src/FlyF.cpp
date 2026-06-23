@@ -11,6 +11,7 @@ using namespace std;
 
 // PID library
 #include "PID.h"
+#include "motor_controller.hpp"
 #include<cstdio>
 
 // EKF instance
@@ -24,7 +25,12 @@ using namespace std;
 static uint32_t last_update_tick = 0;
 static const uint32_t UPDATE_PERIOD_MS = 10;  // 10ms (100Hz)
 
-void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3ch, int sbusdata1ch, int sbusdata4ch){
+MotorController* motor1 = nullptr;
+MotorController* motor2 = nullptr;
+MotorController* motor3 = nullptr;
+MotorController* motor4 = nullptr;
+
+void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3ch, int sbusdata1ch, int sbusdata4ch, int sbusdata2ch){
     context->count++;
     printf("Fly %d\n",context->count);
     // 10ms周期で実行
@@ -86,7 +92,43 @@ void flyf(State* current_state, Context* context, int sbusdata9ch, int sbusdata3
     float roll_u = roll_pid.getData();
     float pitch_u = pitch_pid.getData();
     float yaw_u = yaw_pid.getData();
+
+    //ここからモーターを動かそうと試みる
+    // --- 1. 基本となるスロットル量（ベースの推力）をプロポから取得 ---
+    // 例として 2ch がスロットルだとします。
+    // sbusの範囲が 1024〜1696、あるいは 368〜1696 だとして、0% 〜 100% の範囲に変換します。
+    // ここでは簡易的に、ベース推力を throttle (0.0f ~ 100.0f) と定義します。
+    float throttle = (sbusdata2ch - 368) * (100.0f / 1328.0f);
+    if (throttle < 0.0f) throttle = 0.0f;
+    // --- 2. ミキシング計算（ベース推力にPIDの修正量を加減算する） ---
+    // ※機体の向きやモーターの回転方向によってプラスマイナスは変わりますが、一般的なX型は以下の通りです
+    float m1_speed = throttle + roll_u - pitch_u + yaw_u; // 左前
+    float m2_speed = throttle - roll_u - pitch_u - yaw_u; // 右前
+    float m3_speed = throttle - roll_u + pitch_u + yaw_u; // 右後
+    float m4_speed = throttle + roll_u + pitch_u - yaw_u; // 左後
+    // --- 3. 出力値の制限（0% 〜 100% の間に収めるガード処理） ---
+    // これをしないと、setSpeedに120%などが渡ってしまいエラーになるか暴走します
+    auto clamp = [](float& val) {
+        if (val < 0.0f)   val = 0.0f;
+        if (val > 100.0f) val = 100.0f;
+    };
+    clamp(m1_speed);
+    clamp(m2_speed);
+    clamp(m3_speed);
+    clamp(m4_speed);
+
+    // --- 4. モーターへ速度指令を送る ---
+    motor1->setSpeed(m1_speed);
+    motor2->setSpeed(m2_speed);
+    motor3->setSpeed(m3_speed);
+    motor4->setSpeed(m4_speed);
+
     if(sbusdata9ch < 1000){
-        	*current_state = State::Dis;
+    	throttle = 0.0f;
+    	motor1->stop();
+    	motor2->stop();
+    	motor3->stop();
+    	motor4->stop();
+        *current_state = State::Dis;
     }
 }

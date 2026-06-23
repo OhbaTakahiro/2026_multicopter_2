@@ -35,7 +35,7 @@ uint16_t SBUSData[10] = {};
 
 ICM42688P_HAL_I2C icm(&hi2c1, 0b1101001);
 
-int sbusdata3ch ,sbusdata9ch, sbusdata1ch, sbusdata4ch;
+int sbusdata3ch ,sbusdata9ch, sbusdata1ch, sbusdata4ch, sbusdata2ch;
 
 void SBUS_decode();
 
@@ -101,6 +101,7 @@ void loop(){
 	sbusdata3ch = SBUSData[2];
 	sbusdata1ch = SBUSData[0];
 	sbusdata4ch = SBUSData[3];
+	sbusdata2ch = SBUSData[1];
 	switch(current_state){
 	    case State::Start:
 	    	startf(&current_state, &context);
@@ -118,7 +119,7 @@ void loop(){
             armf(&current_state, &context, sbusdata9ch);
             break;
         case State::Fly:
-            flyf(&current_state, &context, sbusdata9ch, sbusdata3ch, sbusdata1ch, sbusdata4ch);
+            flyf(&current_state, &context, sbusdata9ch, sbusdata3ch, sbusdata1ch, sbusdata4ch, sbusdata2ch);
             break;
         case State::Dis:
             disf(&current_state, &context);

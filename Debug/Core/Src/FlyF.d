@@ -32,7 +32,9 @@ Core/Src/FlyF.o: ../Core/Src/FlyF.cpp ../Core/Inc/state_type.hpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/ICM42688P.h ../Core/Inc/i2c.h ../Core/Inc/wrapper.hpp \
  ../Core/Inc/attitude_ekf.h ../Core/Inc/konfig.h ../Core/Inc/matrix.h \
- ../Core/Inc/ekf.h ../Core/Inc/attitude_ekf.h ../Core/Inc/PID.h
+ ../Core/Inc/ekf.h ../Core/Inc/attitude_ekf.h ../Core/Inc/PID.h \
+ ../Core/Inc/motor_controller.hpp ../Core/Inc/pwm_controller.hpp \
+ ../Core/Inc/tim.h
 ../Core/Inc/state_type.hpp:
 ../Core/Inc/ICM42688P_HAL_I2C.h:
 ../Core/Inc/main.h:
@@ -75,3 +77,6 @@ Core/Src/FlyF.o: ../Core/Src/FlyF.cpp ../Core/Inc/state_type.hpp \
 ../Core/Inc/ekf.h:
 ../Core/Inc/attitude_ekf.h:
 ../Core/Inc/PID.h:
+../Core/Inc/motor_controller.hpp:
+../Core/Inc/pwm_controller.hpp:
+../Core/Inc/tim.h:

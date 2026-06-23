@@ -17,6 +17,13 @@ extern AttitudeEKF_t* attitude_ekf;
 extern float accel_data[3];
 extern float gyro_data[3];
 
+class MotorController;
+
+extern MotorController* motor1;
+extern MotorController* motor2;
+extern MotorController* motor3;
+extern MotorController* motor4;
+
 #endif
 
 #endif /* INC_WRAPPER_HPP_ */
